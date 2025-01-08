@@ -114,13 +114,28 @@ func (es *eventStore) View(ctx context.Context, session authn.Session, id string
 	return cli, nil
 }
 
-func (es *eventStore) ListClients(ctx context.Context, session authn.Session, reqUserID string, pm clients.Page) (clients.ClientsPage, error) {
-	cp, err := es.svc.ListClients(ctx, session, reqUserID, pm)
+func (es *eventStore) ListClients(ctx context.Context, session authn.Session, pm clients.Page) (clients.ClientsPage, error) {
+	cp, err := es.svc.ListClients(ctx, session, pm)
 	if err != nil {
 		return cp, err
 	}
 	event := listClientEvent{
-		reqUserID,
+		pm,
+	}
+	if err := es.Publish(ctx, event); err != nil {
+		return cp, err
+	}
+
+	return cp, nil
+}
+
+func (es *eventStore) ListUserClients(ctx context.Context, session authn.Session, userID string, pm clients.Page) (clients.ClientsPage, error) {
+	cp, err := es.svc.ListUserClients(ctx, session, userID, pm)
+	if err != nil {
+		return cp, err
+	}
+	event := listUserClientEvent{
+		userID,
 		pm,
 	}
 	if err := es.Publish(ctx, event); err != nil {
