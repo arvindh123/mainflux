@@ -314,9 +314,9 @@ type addChildrenGroupsEvent struct {
 
 func (acge addChildrenGroupsEvent) Encode() (map[string]interface{}, error) {
 	return map[string]interface{}{
-		"operation":   groupAddChildrenGroups,
-		"id":          acge.id,
-		"childre_ids": acge.childrenIDs,
+		"operation":    groupAddChildrenGroups,
+		"id":           acge.id,
+		"children_ids": acge.childrenIDs,
 	}, nil
 }
 
