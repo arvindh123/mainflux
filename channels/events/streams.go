@@ -121,13 +121,13 @@ func (es *eventStore) ListChannels(ctx context.Context, session authn.Session, p
 	return cp, nil
 }
 
-func (es *eventStore) ListChannelsByClient(ctx context.Context, session authn.Session, clientID string, pm channels.PageMetadata) (channels.Page, error) {
-	cp, err := es.svc.ListChannelsByClient(ctx, session, clientID, pm)
+func (es *eventStore) ListUserChannels(ctx context.Context, session authn.Session, userID string, pm channels.PageMetadata) (channels.Page, error) {
+	cp, err := es.svc.ListUserChannels(ctx, session, userID, pm)
 	if err != nil {
 		return cp, err
 	}
-	event := listChannelByClientEvent{
-		clientID,
+	event := listUserChannelsEvent{
+		userID,
 		pm,
 	}
 	if err := es.Publish(ctx, event); err != nil {
